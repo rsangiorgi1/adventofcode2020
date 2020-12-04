@@ -7,7 +7,7 @@ def get_tree_count(data, right, down):
     for vertical_position, row in enumerate(data):
         # Ensure vertical position is correct by skipping over unnecessary rows
         if not vertical_position % down == 0:
-            # print(row)
+            print(row)
             continue
         
         # Ensure horizontal position is correct
@@ -21,11 +21,12 @@ def get_tree_count(data, right, down):
         # SKIPPED if vertical_position = 5
         horizontal_position = int((vertical_position / down * right) % row_length)
         
-        # print(row[:horizontal_position] + "[" + row[horizontal_position] + "]" + row[horizontal_position + 1:])
+        print(row[:horizontal_position] + "[" + row[horizontal_position] + "]" + row[horizontal_position + 1:])
 
         if row[horizontal_position] == "#":
             number_of_trees += 1
     return number_of_trees
+
 
 
 def data_to_list(file_path):
