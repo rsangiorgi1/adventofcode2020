@@ -1,13 +1,20 @@
 from functools import reduce
 
-def get_highest_seat_id(boarding_passes):
+def get_missing_seat_id(boarding_passes):
     seat_ids = []
     for boarding_pass in boarding_passes:
         seat_id = get_seat_id(boarding_pass)
         seat_ids.append(seat_id)
-        print(f"boarding pass: {boarding_pass}, seat id: {seat_id}")
-    return max(seat_ids)
+    seat_ids = sorted(seat_ids)
+    print(seat_ids)
+    for i, seat_id in enumerate(seat_ids):
+        print(seat_id)
+        if not is_consecutive(seat_id, seat_ids[i + 1]):
+            print(f"No seat found between seat {seat_id} and seat {seat_ids[i + 1]}")
+            return seat_id + 1
 
+def is_consecutive(a, b):
+    return a - b == -1
 
 def get_seat_id(boarding_pass):
     row = get_place_info(boarding_pass, "ROW")
@@ -23,6 +30,7 @@ def get_place_info(boarding_pass, mode):
     elif mode == "COLUMN":
         ticket_info = boarding_pass[7:]
         possibilities = list(range(8))
+
     for i in range(len(ticket_info)):
         possibilities = get_half_possibilities(ticket_info[i], possibilities)
     return possibilities[0]
@@ -46,4 +54,4 @@ def data_to_list(file_path):
     return list(map(str, content.split()))
 
 if __name__ == "__main__":
-    print(get_highest_seat_id(data_to_list("./data")))
+    print(get_missing_seat_id(data_to_list("./data")))
