@@ -10,17 +10,16 @@ def get_column(boarding_pass):
     column_info = boarding_pass[7:]
     print(column_info)
     possible_columns = list(range(0, 8))
-    for letter in column_info:
-        if letter == "R":
+    for i in range(3):
+        if column_info[i] == "R":
             possible_columns = get_remaining_half("UPPER", possible_columns)
-        elif letter == "L":
+        elif column_info[i] == "L":
             possible_columns = get_remaining_half("LOWER", possible_columns)
     return possible_columns[0]
 
 def get_row(boarding_pass):
     row_info = boarding_pass[:-3]
     print(row_info)
-    p
     return row_info
 
 def get_seat_id(row, column):
