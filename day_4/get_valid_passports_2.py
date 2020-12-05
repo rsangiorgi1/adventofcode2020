@@ -13,30 +13,19 @@ REQUIRED_FIELDS = [
 def count_valid_passports(passports):
     valid_passports = 0
     for passport in passports:
-        if is_valid_passport(passport):
-            valid_passports += 1
+        if is_valid_passport(passport): valid_passports += 1
     return valid_passports
 
 def is_valid_passport(passport):
-    # print(f"---> new passport: {passport}<---")
     if all(word in passport for word in REQUIRED_FIELDS):
-        print(f"------------------------------------------------------------")
-        if validate_fields(passport):
-            print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-            print(f"\ncorrect passport: \n{passport}")
-            return True
-        else:
-            print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-            print(f"\nINCORRECT passport: \n{passport}")
+        return validate_fields(passport)
     return False
 
 def validate_fields(passport):
     # let's try a dictionary comprehension :)
     passport_template = {key: extract_passport_value(passport, key) for key in REQUIRED_FIELDS}
 
-    print(passport)
-    print(passport_template)
-    
+    # Check for the following rules:
     # byr: length: 4, type int, min 1920, max 2002
     # iyr: length: 4, type int, min 2010, max 2020
     # eyr: length: 4, type int, min 2020, max 2030
@@ -53,9 +42,9 @@ def validate_fields(passport):
     is_valid_eye_color(passport_template["ecl"]) and \
     is_valid_number(passport_template["pid"], 9, 0, 999999999)
 
+# validation functions
 def is_valid_number(number, length, min_value, max_value):
     number_as_int = 0
-    print("printing")
     try:
         number_as_int = int(number)
     except ValueError:
@@ -63,9 +52,6 @@ def is_valid_number(number, length, min_value, max_value):
     return len(number) == length and min_value <= number_as_int <= max_value
 
 def is_valid_hex(value):
-    print(bytes("#000000", "utf-8"))
-    print(bytes("#ffffff", "utf-8"))
-    print(bytes(value, "utf-8"))
     return bytes("#000000", "utf-8") <= bytes(value, "utf-8") <= bytes("#ffffff", "utf-8")
 
 def is_valid_height(value):
@@ -78,11 +64,9 @@ def is_valid_height(value):
 def is_valid_eye_color(value):
     return value in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 
+# helper functions
 def extract_passport_value(passport, key):
     return re.search(rf"{key}:(.*?)(?!\S)", passport).group(1)
-
-
-
 
 def data_to_list(file_path):
     datafile = open(file_path)
