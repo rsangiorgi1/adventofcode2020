@@ -2,9 +2,10 @@ from functools import reduce
 
 def get_missing_seat_id(boarding_passes):
     seat_ids = []
-    for boarding_pass in boarding_passes:
-        seat_id = get_seat_id(boarding_pass)
-        seat_ids.append(seat_id)
+    # for boarding_pass in boarding_passes:
+    #     seat_id = get_seat_id(boarding_pass)
+    #     seat_ids.append(seat_id)
+    seat_ids = map(get_seat_id, boarding_passes)
     seat_ids = sorted(seat_ids)
     print(seat_ids)
     for i, seat_id in enumerate(seat_ids):
