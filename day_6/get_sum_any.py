@@ -2,7 +2,6 @@ from functools import reduce
 
 def get_sum(answers):
     counted_answers = list(map(lambda x: len(set(x)), answers))
-    print(counted_answers)
     return reduce(lambda x, y: x + y, counted_answers)
 
 def data_to_list(file_path):
