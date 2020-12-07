@@ -8,6 +8,7 @@ def get_missing_seat_id(boarding_passes):
             print(f"No seat found between seat {seat_id} and seat {seat_ids[i + 1]}")
             return seat_id + 1
 
+# could be a lambda
 def is_consecutive(a, b):
     return a - b == -1
 

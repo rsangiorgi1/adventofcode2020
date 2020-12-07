@@ -6,6 +6,7 @@ def get_tree_count(data):
         # if i = 13, index should be 13 % 10
         index = (i * 3) % row_length
         # print(index)
+        
 
         # index = (i + 1) * 3
         if row[index] == "#":

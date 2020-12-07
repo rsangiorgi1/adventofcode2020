@@ -13,5 +13,7 @@ def data_to_list(file_path):
 
 if __name__ == "__main__":
     all_entries = data_to_list("./data")
+    print("hallo domenico")
+    print(all_entries)
     print(get_multiplication_of_entries_that_sum_to_2020(all_entries))
     
