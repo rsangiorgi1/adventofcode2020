@@ -19,7 +19,8 @@ def count_bags_in_bag(bag, rules, remaining_bags_to_check):
     rule = get_rule(rules, bag["color"])
     number_of_bags = bag["count"]
     for inner_bag in rule["inner_bags"]:
-        bag_to_check = dict(inner_bag)
+        # why is this cloning a dict so important!
+        bag_to_check = inner_bag
         bag_to_check["count"] = inner_bag["count"] * number_of_bags
         remaining_bags_to_check.append(bag_to_check)
     remaining_bags_to_check.remove(bag)
