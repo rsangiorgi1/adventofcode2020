@@ -1,0 +1,50 @@
+[
+  {
+    "outer_bag_color": "light red",
+    "inner_bags": [
+      { "color": "bright white", "count": 1 },
+      { "color": "muted yellow", "count": 2 }
+    ]
+  },
+  {
+    "outer_bag_color": "dark orange",
+    "inner_bags": [
+      { "color": "bright white", "count": 3 },
+      { "color": "muted yellow", "count": 4 }
+    ]
+  },
+  {
+    "outer_bag_color": "bright white",
+    "inner_bags": [{ "color": "shiny gold", "count": 1 }]
+  },
+  {
+    "outer_bag_color": "muted yellow",
+    "inner_bags": [
+      { "color": "shiny gold", "count": 2 },
+      { "color": "faded blue", "count": 9 }
+    ]
+  },
+  {
+    "outer_bag_color": "shiny gold",
+    "inner_bags": [
+      { "color": "dark olive", "count": 1 },
+      { "color": "vibrant plum", "count": 2 }
+    ]
+  },
+  {
+    "outer_bag_color": "dark olive",
+    "inner_bags": [
+      { "color": "faded blue", "count": 3 },
+      { "color": "dotted black", "count": 4 }
+    ]
+  },
+  {
+    "outer_bag_color": "vibrant plum",
+    "inner_bags": [
+      { "color": "faded blue", "count": 5 },
+      { "color": "dotted black", "count": 6 }
+    ]
+  },
+  { "outer_bag_color": "faded blue", "inner_bags": [] },
+  { "outer_bag_color": "dotted black", "inner_bags": [] }
+]
