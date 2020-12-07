@@ -28,47 +28,59 @@
 
 def count_bags(data, color):
     rules = parse_rules(data)
+    remaining_bags_to_check = [{
+        "color": color,
+        "count": 1
+    }]
+    total_bags_found = 0
+    count = 0
 
-    # first_rule = get_rule(rules, color)
-    first_rule = get_rule(rules, "vibrant plum") # should return 11 per bag
-    # first_rule = get_rule(rules, "muted yellow")
-    print(f"first rule: {first_rule}")
-    end_bag_count, remaining_bags_to_check = count_bags_by_rule(first_rule, rules, 2)
-    print(f"bags found after first rule: {end_bag_count} and need to check bags: {remaining_bags_to_check}")
+    for rule in rules:
+        print(is_end_bag(rule["outer_bag_color"], rules))
 
-    return first_rule
+    while len(remaining_bags_to_check) != 0:
+        print("\n")
+        count += 1
+        print(f"""bags left to check: {remaining_bags_to_check},
+XXXX now checking bag {remaining_bags_to_check[0]}...""")
+        new_end_bags_found, remaining_bags_to_check = count_bags_in_bag(remaining_bags_to_check[0], rules, remaining_bags_to_check)
+        total_bags_found += new_end_bags_found
+        print(f"--new end bags found: {new_end_bags_found}, total bags found so far: {total_bags_found} and need to check bags: {remaining_bags_to_check}")
+
+    # remove most outer bag   
+    return total_bags_found - 1
+    # return "ok!"
 
 def get_rule(rules, outer_color):
     # todo: break if rule found
     return [rule for rule in rules if rule["outer_bag_color"] == outer_color][0]
 
-def count_bags_by_rule(rule, rules, number_of_bags):
-    # returns # of end bags and which remainging bags to check
-    end_bags_found = 0
-    remaining_bags_to_check = []
-    print(f"rule is {rule}")
+def count_bags_in_bag(bag, rules, remaining_bags_to_check):
+    print("#######")
+    print(rules[1])
+    # returns number of outer bags (current bag) and which remaining bags left to check 
+    number_of_bags = 0
+    rule = get_rule(rules, bag["color"])
+    print(f"rule for {bag['color']}: {rule}")
+    print(f"is end bag? {is_end_bag(bag['color'], rules)} ")
+    number_of_bags = bag["count"]
+    if is_end_bag(bag["color"], rules):
+        print(f"""no inner bags for for {bag['color']}""")
     for inner_bag in rule["inner_bags"]:
-        if is_end_bag(inner_bag["color"], rules):
-            print(f"end of line for {rule['outer_bag_color']}")
-            end_bags_found += inner_bag["count"] * number_of_bags
-        else:
-            inner_bag["count"] = inner_bag["count"] * number_of_bags
-            remaining_bags_to_check.append(inner_bag)
+        print(f"""found inner bags for for {bag['color']}""")
+        print(inner_bag)
+        new_bag = dict(inner_bag)
+        new_bag["count"] = inner_bag["count"] * number_of_bags
+        remaining_bags_to_check.append(new_bag)
 
-    return end_bags_found, remaining_bags_to_check
-
-def count_end_bags():
-    number_of_end_bags = 0
-    for bag in bags:
-        if is_end_bag(bag[""])
-    return number_of_end_bags
-
+    # print(len(remaining_bags_to_check))
+    remaining_bags_to_check.remove(bag)
+    # print(len(remaining_bags_to_check))
+    print(f"should add {number_of_bags}")
+    return number_of_bags, remaining_bags_to_check
 
 def is_end_bag(outer_color, rules):
     rule = get_rule(rules, outer_color)
-    print(rule)
-    print(rule["inner_bags"])
-
     return len(rule["inner_bags"]) == 0
 
 def parse_rules(data):
@@ -104,6 +116,4 @@ def data_to_list(file_path):
     return list(map(str, content.split("\n")))
 
 if __name__ == "__main__":
-    # print(count_bag_color_options(data_to_list("./data"), "shiny gold"))
-    
-    print(count_bags(data_to_list("./tdata"), "shiny gold"))
+    print(count_bags(data_to_list("./data"), "shiny gold"))
