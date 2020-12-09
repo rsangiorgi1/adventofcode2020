@@ -11,6 +11,7 @@ def get_working_instructions():
     return accumulator
 
 def flip_first_jmp_nop(instructions, start_index):
+    # returns instructions with first jmp/nop found after start_index switched AND index of that flipped instruction
     found_at = 0
     for i in range(start_index, len(instructions)):
         if instructions[i].split(" ")[0] == "nop":
@@ -24,20 +25,23 @@ def flip_first_jmp_nop(instructions, start_index):
     return instructions, found_at
 
 def check_program(instructions):
+    # returns final accumulator value AND if the instructions make a valid program
     accumulator_value = 0
     history = []
     current_instruction_index = 0
     
     while True:
-        if not current_instruction_index in history:
-            history.append(current_instruction_index)
-        else:
+        if current_instruction_index in history:
+            # instructions result in infinite loop
             return accumulator_value, False
+        history.append(current_instruction_index)
         current_instruction_index, accumulator_value = get_next_instruction(instructions, current_instruction_index, accumulator_value)
-        if current_instruction_index == len(instructions):
-            return accumulator_value, True
         if current_instruction_index > len(instructions):
+            # next instruction to check is more than one after the latest, so the program is invalid
             return accumulator_value, False
+        if current_instruction_index == len(instructions):
+            # next instruction to check is one after the latest, so the program is valid
+            return accumulator_value, True
 
 def get_next_instruction(instructions, current_index, current_accumulator_value):
     # returns index for next instruction AND the updated accumulator value
