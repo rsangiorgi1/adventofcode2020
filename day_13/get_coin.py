@@ -1,49 +1,118 @@
+from functools import reduce
+
 def solution(data):
     bus_ids = data[1].split(",")
-    bus_info = get_bus_info(bus_ids)
+    buses_info = get_buses_info(bus_ids)
 
-    departure_time = 0
-    bus_ids = list(map(lambda bus: bus["id"], bus_info))
-    consecutive_buses = [bus_info[0]]
-    print(bus_ids)
-    print(bus_info)
+    consecutive_buses_found = [buses_info[0]]
 
-    count = 0
-    # while departure_time < 10000:
-        # print(f"look for bus {bus_to_find}")
-        # if is_departing(bus_to_find, departure_time):
-        #     print("ok")
-        # departure_time += bus_info[0]["t_plus"]
 
-    while count <= 5:
-        # current_bus_info = bus_info[len(consecutive_buses)]
-        # previous_bus_info = bus_info[len(consecutive_buses) + 1]
-        current_bus_info = bus_info[0]
-        previous_bus_info = bus_info[1]
-        difference_with_previous_bus = bus_info[0]["t_plus"] - bus_info[1]["t_plus"]
-        print(f"""
-    trying to find bus {previous_bus_info}
-    attempt {count}, timestamp {count * bus_info[0]["id"]}
-    consecutive buses found {consecutive_buses}
-    difference with previous bus: {difference_with_previous_bus}
-        """)
-        # (4*x-2)%3 == 0
-        if looksgood(current_bus_info, previous_bus_info, count):
+    # print(calculate_jump_size(buses_info))
 
-            print(f"buses {current_bus_info['id']} and {previous_bus_info['id']} follow the rule at time {count * bus_ids[0]}")
-            if not previous_bus_info in consecutive_buses:
-                consecutive_buses.append(previous_bus_info)
+    # print(is_departing(buses_info[0], 7))
+
+    initial_timestamp = buses_info[0]["id"]
+    jump_size = calculate_jump_size(consecutive_buses_found)
+    timestamp_to_check = initial_timestamp
+
+    while True:
+        latest_bus_added = buses_info[(len(consecutive_buses_found)) - 1]
+        bus_to_check = buses_info[(len(consecutive_buses_found))]
+        bus_to_check_should_depart_at = timestamp_to_check + bus_to_check["t_plus"]
+        # print(timestamp_to_check, latest_bus_added["t_plus"])
+        latest_bus_added_can_depart_at = timestamp_to_check + latest_bus_added["t_plus"]
+        final_bus_departs_at = timestamp_to_check + buses_info[-1]["t_plus"]
+        bus_to_check_can_depart = is_departing(bus_to_check, bus_to_check_should_depart_at)
+        print(f"""--------------------------
+checking where first bus has timestamp: {timestamp_to_check}
+last bus added was: {latest_bus_added}
+buses found so far (in reverse order):
+
+{consecutive_buses_found}
+
+should check if we can add next bus: {bus_to_check}
+does {bus_to_check} depart at {bus_to_check_should_depart_at}? {bus_to_check_can_depart}""")
+        
+
+        if bus_to_check_can_depart:
+            consecutive_buses_found.append(bus_to_check)
+            
+            print(f"""
+adding bus {bus_to_check}
+buses found so far (in reverse order):
+
+{consecutive_buses_found}
+
+current jump size was {jump_size}, increasing to {jump_size * bus_to_check['id']}
+-----------""")
+            jump_size = calculate_jump_size(consecutive_buses_found)
+        
+    
+            if len(consecutive_buses_found) == len(buses_info):
+                print(f"""
+found all buses {consecutive_buses_found} where first bus departs at {timestamp_to_check}
+and latest bus departs at {final_bus_departs_at}
+""")
+                break
+
+
+
+            continue
         # else:
-        #     departure_time 
-        count += 1
+            # consecutive_buses_found.pop()
+            # jump_size = calculate_jump_size(consecutive_buses_found)
+        
+
+
+        timestamp_to_check += jump_size
+
+#     first_bus_departing_at = buses_info[0]["id"]
+#     previous_bus_departed_at = first_bus_timestamp
+
+#     start_at = first_bus_timestamp
+#     while first_bus_timestamp <= 100:
+#         # print(f"all buses {bus_info}")
+#         print(f"consecutive buses found so far: {consecutive_buses_found}")
+#         if len(consecutive_buses_found) == len(buses_info):
+#             print(f"all buses match up at time {first_bus_timestamp}")
+#             break
+
+#         current_bus_info = buses_info[len(consecutive_buses_found) - 1]
+#         next_bus_info = buses_info[len(consecutive_buses_found)]
+#         next_bus_should_depart_at = first_bus_timestamp - (buses_info[0]["t_plus"] - next_bus_info["t_plus"])
+
+#         print(f"""
+# current bus: {current_bus_info['id']} next bus: {next_bus_info['id']} first_bus_timestamp {first_bus_timestamp}
+# looking if bus >>>>>>>>>>{next_bus_info['id']}<<<<<<<< is departing at >>>>{next_bus_should_depart_at}<<<<<
+#         """)
+#         # (4*x-2)%3 == 0
+
+
+#         if next_bus_should_depart_at % next_bus_info["id"] == 0:
+#             print(f"""
+# --------------> bus {next_bus_info} departs at {next_bus_should_depart_at}
+            
+#             """)
+#             consecutive_buses_found.append(next_bus_info)
+#             first_bus_departing_at = first_bus_timestamp
+#             previous_bus_departed_at = next_bus_should_depart_at
+#             continue
+
+#         print(f"""
+# did not find a bus, next search should look at a first bus departing at {start_at}
+#         """)
+#         start_at += buses_info[0]["id"]
+#         consecutive_buses_found.pop()
+#         first_bus_timestamp *= first_bus_timestamp
 
     return "ok"
 
-def looksgood(current_bus_info, previous_bus_info, attempt):
-    difference_with_previous_bus = current_bus_info["t_plus"] - previous_bus_info["t_plus"]
-    return (current_bus_info["id"]*attempt - difference_with_previous_bus) % previous_bus_info["id"] == 0
+def calculate_jump_size(buses_found):
+    ids = map(lambda bus_found: bus_found["id"], buses_found)
+    return reduce(lambda x, y: x * y, ids, 1)
+    # return buses_found[0][""]
 
-def get_bus_info(bus_ids):
+def get_buses_info(bus_ids):
     bus_info = []
 
     for i, bus_id in enumerate(bus_ids):
@@ -52,12 +121,12 @@ def get_bus_info(bus_ids):
                 "id": int(bus_id),
                 "t_plus": i
             })
-    bus_info.reverse()
+    # bus_info.reverse()
     return bus_info
         
-def is_departing(bus_id, departure_time):
-    print(bus_id)
-    return departure_time % int(bus_id) == 0
+def is_departing(bus_info, departure_time):
+    # print(bus_info)
+    return departure_time % int(bus_info["id"]) == 0
 
 def data_to_list(file_path):
     datafile = open(file_path)
